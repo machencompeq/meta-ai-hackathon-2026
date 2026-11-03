@@ -1,0 +1,172 @@
+{
+  "run_at": "2026-11-04T01:08:21",
+  "mock_llm": false,
+  "profile": "Demo Student",
+  "cash": {
+    "lowest": 15701.0,
+    "lowest_day": "2026-12-01",
+    "shortfall_days": [],
+    "transfers": []
+  },
+  "allocation": {
+    "bills_covered": true,
+    "to_emergency_fund": 4000.0,
+    "investable": 8701.0,
+    "reasons": [
+      "Lowest projected balance 15,701; spare above buffer 12,701.",
+      "Emergency fund short by 4,000: put 4,000 there first.",
+      "Investable this month: 8,701."
+    ]
+  },
+  "signal_cards": [
+    {
+      "role": "Technical position",
+      "direction": "neutral",
+      "strength": 3,
+      "evidence": "0050 last 195.81 below ma20 196.08 above ma60 193.04 pct_vs_ma60 0.0143 chg_20d -0.0438; 006208 last 133.91 below ma20 134.57 above ma60 130.23 pct_vs_ma60 0.0283 chg_20d 0.0102; 0056 last 40.44 below ma20 41.29 above ma60 39.5 pct_vs_ma60 0.0238 chg_20d -0.0158; 00878 last 28.61 below ma20 29.48 above ma60 26.74 pct_vs_ma60 0.0699 chg_20d -0.0269; 00632R last 3.65 above ma20 3.63 above ma60 3.55 pct_vs_ma60 0.0287 chg_20d -0.0135; favors split entry"
+    },
+    {
+      "role": "ETF & dividend",
+      "direction": "neutral",
+      "strength": 3,
+      "evidence": "0050 last 195.81 below ma20 196.08 and above ma60 193.04 with pct_vs_ma60 0.0143 and chg_20d -0.0438 while 006208 last 133.91 below ma20 134.57 and above ma60 130.23 with pct_vs_ma60 0.0283 and chg_20d 0.0102 favors 006208 over 0050 for core market exposure and 0056 last 40.44 below ma20 41.29 and above ma60 39.5 with pct_vs_ma60 0.0238 and chg_20d -0.0158 while 00878 last 28.61 below ma20 29.48 and above ma60 26.74 with pct_vs_ma60 0.0699 and chg_20d -0.0269 keeps dividend trend intact with pullback"
+    },
+    {
+      "role": "Semiconductor chain",
+      "direction": "neutral",
+      "strength": 3,
+      "evidence": "0050 last 195.81 below ma20 196.08 with chg_20d -0.0438, ma60 193.04 with pct_vs_ma60 0.0143; 006208 last 133.91 vs ma20 134.57 with chg_20d 0.0102"
+    },
+    {
+      "role": "Market temperature",
+      "direction": "bearish",
+      "strength": 2,
+      "evidence": "0050 chg_20d -0.0438 last 195.81 below ma20 196.08, 006208 chg_20d 0.0102 last 133.91 below ma20 134.57, 0056 chg_20d -0.0158 last 40.44 below ma20 41.29, 00878 chg_20d -0.0269 last 28.61 below ma20 29.48, 00632R chg_20d -0.0135 shows cooling crowd heat, avoid chasing"
+    }
+  ],
+  "proposals": [
+    {
+      "id": "A",
+      "title": "All core index (0050)",
+      "orders": [
+        {
+          "symbol": "0050",
+          "side": "buy",
+          "amount": 8701.0,
+          "price": 195.81,
+          "margin": false
+        }
+      ],
+      "rationale": ""
+    },
+    {
+      "id": "B",
+      "title": "Index + dividend split",
+      "orders": [
+        {
+          "symbol": "0050",
+          "side": "buy",
+          "amount": 5221.0,
+          "price": 195.81,
+          "margin": false
+        },
+        {
+          "symbol": "00878",
+          "side": "buy",
+          "amount": 3480.0,
+          "price": 28.61,
+          "margin": false
+        }
+      ],
+      "rationale": ""
+    },
+    {
+      "id": "C",
+      "title": "Split buy: half now, half next week",
+      "orders": [
+        {
+          "symbol": "006208",
+          "side": "buy",
+          "amount": 4350.0,
+          "price": 133.91,
+          "margin": false
+        }
+      ],
+      "rationale": ""
+    }
+  ],
+  "scores": {
+    "buffett": {
+      "A": 3,
+      "B": 2,
+      "C": 5
+    },
+    "lynch": {
+      "A": 2,
+      "B": 1,
+      "C": 3
+    },
+    "bogle": {
+      "A": 4,
+      "B": 2,
+      "C": 5
+    },
+    "dalio": {
+      "A": 1,
+      "B": 2,
+      "C": 5
+    },
+    "kostolany": {
+      "A": 2,
+      "B": 3,
+      "C": 4
+    }
+  },
+  "devil": {
+    "strongest_counter_argument": "Buying half now catches a confirmed short-term downtrend: all 4 longs below ma20 (0050 195.81<196.08, 006208 133.91<134.57, 0056 40.44<41.29, 00878 28.61<29.48) with 0050 chg_20d -0.0438 leading weakness. 006208 at pct_vs_ma60 0.0283 is more extended than 0050 at 0.0143 with only chg_20d 0.0102, implying catch-up downside risk toward ma60 130.23 (-2.7% lower). Bearish temperature (strength 2) explicitly warns cooling heat / avoid chasing. Split still commits capital before any support test or ma20 reclaim.",
+    "what_would_prove_it_wrong": "006208 holds above ma60 130.23 and reclaims ma20 134.57 while 0050 holds above ma60 193.04 and chg_20d flattens/turns positive, proving this was healthy consolidation above trend not a deeper leg down, with the second half filled at equal or higher price."
+  },
+  "risk": [
+    {
+      "proposal_id": "A",
+      "approved": false,
+      "violations": [
+        "0050: would be 94% of portfolio (> 60%)."
+      ]
+    },
+    {
+      "proposal_id": "B",
+      "approved": false,
+      "violations": [
+        "0050: would be 74% of portfolio (> 60%)."
+      ]
+    },
+    {
+      "proposal_id": "C",
+      "approved": true,
+      "violations": []
+    }
+  ],
+  "decision": {
+    "choice": {
+      "id": "C",
+      "title": "Split buy: half now, half next week",
+      "orders": [
+        {
+          "symbol": "006208",
+          "side": "buy",
+          "amount": 4350.0,
+          "price": 133.91,
+          "margin": false
+        }
+      ],
+      "rationale": ""
+    },
+    "totals": {
+      "A": 12,
+      "B": 10,
+      "C": 22
+    },
+    "summary": "We chose C: buy half of 006208 now and half next week. A and B were blocked because they would put over 60% in one stock. Splitting is safer since prices are in a short-term dip."
+  }
+}

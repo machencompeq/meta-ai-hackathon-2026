@@ -1,0 +1,64 @@
+{
+  "run_at": "2026-11-04T01:10:09",
+  "mock_llm": false,
+  "profile": "Short On Cash",
+  "cash": {
+    "lowest": -10600.0,
+    "lowest_day": "2026-11-12",
+    "shortfall_days": [
+      "2026-11-08",
+      "2026-11-09",
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13",
+      "2026-11-14"
+    ],
+    "transfers": [
+      "Move 9,000 from emergency fund before 2026-11-08",
+      "Still short 2,600: extra income or cut spending before 2026-11-08"
+    ]
+  },
+  "allocation": {
+    "bills_covered": false,
+    "to_emergency_fund": 0.0,
+    "investable": 0.0,
+    "reasons": [
+      "Cash goes below buffer on 2026-11-08: invest 0, fix bills first."
+    ]
+  },
+  "signal_cards": [
+    {
+      "role": "Technical position",
+      "direction": "neutral",
+      "strength": 3,
+      "evidence": "0050 last 195.81 vs ma20 196.08 and ma60 193.04 with pct_vs_ma60 0.0143 and chg_20d -0.0438, 006208 last 133.91 vs ma20 134.57 and ma60 130.23 with pct_vs_ma60 0.0283 and chg_20d 0.0102, 0056 last 40.44 vs ma20 41.29 and ma60 39.5 with pct_vs_ma60 0.0238 and chg_20d -0.0158, 00878 last 28.61 vs ma20 29.48 and ma60 26.74 with pct_vs_ma60 0.0699 and chg_20d -0.0269, 00632R last 3.65 vs ma20 3.63 and ma60 3.55 with pct_vs_ma60 0.0287 and chg_20d -0.0135 supports split buying"
+    },
+    {
+      "role": "ETF & dividend",
+      "direction": "neutral",
+      "strength": 3,
+      "evidence": "0050 last 195.81 ma20 196.08 ma60 193.04 pct_vs_ma60 0.0143 chg_20d -0.0438; 006208 last 133.91 ma20 134.57 ma60 130.23 pct_vs_ma60 0.0283 chg_20d 0.0102; 0056 last 40.44 ma20 41.29 ma60 39.5 pct_vs_ma60 0.0238 chg_20d -0.0158; 00878 last 28.61 ma20 29.48 ma60 26.74 pct_vs_ma60 0.0699 chg_20d -0.0269"
+    },
+    {
+      "role": "Semiconductor chain",
+      "direction": "neutral",
+      "strength": 2,
+      "evidence": "0050 last 195.81 < ma20 196.08, > ma60 193.04, pct_vs_ma60 0.0143, chg_20d -0.0438; 006208 last 133.91 < ma20 134.57, > ma60 130.23, pct_vs_ma60 0.0283"
+    },
+    {
+      "role": "Market temperature",
+      "direction": "bearish",
+      "strength": 2,
+      "evidence": "0050 chg_20d -0.0438 last 195.81 ma20 196.08, 0056 chg_20d -0.0158 last 40.44 ma20 41.29, 00878 chg_20d -0.0269 last 28.61 ma20 29.48, 00632R chg_20d -0.0135 last 3.65 ma20 3.63, 006208 chg_20d 0.0102 last 133.91 ma20 134.57"
+    }
+  ],
+  "proposals": [],
+  "scores": {},
+  "devil": {},
+  "risk": [],
+  "decision": {
+    "choice": null,
+    "summary": "No investing this month. Cash goes below buffer on 2026-11-08: invest 0, fix bills first."
+  }
+}

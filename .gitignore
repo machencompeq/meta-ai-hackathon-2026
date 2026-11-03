@@ -4,3 +4,7 @@ __pycache__/
 .env
 out/
 docs/_private/
+.playwright-mcp/
+submit.yml
+out_*/
+shot_*.png

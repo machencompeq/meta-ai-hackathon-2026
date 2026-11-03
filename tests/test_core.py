@@ -65,6 +65,16 @@ def test_risk_vetoes():
     assert risk.check(p, ok, 1000, prices).approved
 
 
+def test_intake_mock_and_trace(monkeypatch):
+    from finagent import intake, llm
+    monkeypatch.delenv("MODEL_API_KEY", raising=False)
+    monkeypatch.delenv("META_API_KEY", raising=False)
+    llm.reset_trace()
+    item, rec = intake.parse("dentist bill 4,500 due on the 9th")
+    assert item.amount == 4500 and item.day_of_month == 9
+    assert llm.TRACE == [rec] and rec["label"] == "intake"
+
+
 def test_full_meeting_offline(monkeypatch):
     monkeypatch.delenv("MODEL_API_KEY", raising=False)
     monkeypatch.delenv("META_API_KEY", raising=False)

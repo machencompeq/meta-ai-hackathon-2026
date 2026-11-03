@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paycheck Committee</title>
+<style>
+:root{
+  --bg:#0F1B30;--panel:#16253F;--panel2:#1C2E4E;--line:#2A3E62;--text:#EEF2F8;--muted:#9AAAC4;
+  --accent:#F0A35E;--blue:#5AA2F0;--veto:#F07A5E;--ok:#6CC4A1;--idle:#3A4D70;
+  --mono:"JetBrains Mono",Consolas,"Courier New",monospace;--sans:"Inter","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 var(--sans)}
+header{display:flex;align-items:center;gap:16px;padding:14px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+h1{font-size:22px;margin:0;letter-spacing:-.3px}
+.badge{font:600 12px var(--mono);padding:4px 10px;border-radius:999px;border:1px solid var(--line)}
+.badge.live{background:#173A2F;border-color:#2F7A5E;color:#9FE6C8}
+.badge.mock{background:#3A2A17;border-color:#7A5A2F;color:#F0C890}
+select,button,input{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+button{cursor:pointer;font-weight:600}
+button.primary{background:var(--accent);color:#1B1206;border-color:var(--accent)}
+button:disabled{opacity:.5;cursor:default}
+.spacer{flex:1}
+main{display:grid;grid-template-columns:300px 1fr 320px;gap:14px;padding:14px 22px}
+@media (max-width:1300px){main{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h2{font:600 12px var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.big{font:700 34px var(--sans);letter-spacing:-.5px}
+.neg{color:var(--veto)}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+ul.plain{margin:6px 0 0;padding-left:18px}
+#graph{width:100%;height:auto;display:block}
+.node rect{fill:var(--panel2);stroke:var(--idle);stroke-width:1.5;transition:all .3s}
+.node text{fill:var(--muted);font:600 17px var(--sans);pointer-events:none}
+.node .sub{font:13px var(--mono);fill:var(--muted)}
+.node{cursor:pointer}
+.node.running rect{stroke:var(--accent);stroke-width:3;animation:pulse 1s infinite}
+.node.done rect{stroke:var(--blue);stroke-width:2;fill:#1E3558}
+.node.done text{fill:var(--text)}
+.node.veto rect{stroke:var(--veto);stroke-width:3;fill:#3A1F22}
+.node.ok rect{stroke:var(--ok);stroke-width:3;fill:#183A31}
+.node.skip rect{stroke-dasharray:4 4;opacity:.45}
+.node.sel rect{stroke:#fff}
+@keyframes pulse{50%{stroke-opacity:.35}}
+.edge{stroke:var(--idle);stroke-width:1.2;fill:none;opacity:.5;transition:all .4s}
+.edge.on{stroke:var(--blue);opacity:.9;stroke-width:2}
+.edge.veto{stroke:var(--veto);opacity:.9;stroke-width:2;stroke-dasharray:6 4}
+.stamp{font:800 15px var(--mono);letter-spacing:1px}
+#detail pre{white-space:pre-wrap;word-break:break-word;background:#0B1424;border:1px solid var(--line);border-radius:8px;padding:10px;font:12px/1.5 var(--mono);max-height:260px;overflow:auto;margin:6px 0}
+#detail details summary{cursor:pointer;color:var(--blue);font-size:13px}
+.calls{display:flex;flex-direction:column;gap:6px;max-height:430px;overflow:auto}
+.call{display:grid;grid-template-columns:1fr auto;gap:2px 8px;background:var(--panel2);border-radius:8px;padding:7px 10px;font:12px var(--mono);cursor:pointer;animation:in .35s}
+.call b{font-weight:600;color:var(--text)}
+.call .m{color:var(--muted)}
+@keyframes in{from{opacity:0;transform:translateY(-4px)}}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:var(--panel2);border-radius:8px;padding:8px 10px}
+.stat .v{font:700 22px var(--sans)}
+.stat .k{font:11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.why li{margin:4px 0}
+.say{display:flex;gap:8px}
+.say input{flex:1;min-width:0}
+.chip{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;margin:4px 4px 0 0;font-size:12px}
+.decision{font-size:16px;line-height:1.5}
+.stagebar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.stagebar span{font:600 11px var(--mono);padding:3px 8px;border-radius:999px;background:var(--panel2);color:var(--muted)}
+.stagebar span.on{background:var(--accent);color:#1B1206}
+.stagebar span.past{background:#24406A;color:var(--text)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Paycheck Committee</h1>
+  <span id="mode" class="badge">…</span>
+  <span class="muted small" id="modelinfo"></span>
+  <span class="spacer"></span>
+  <select id="persona" aria-label="Persona"></select>
+  <button id="run" class="primary">Run monthly meeting</button>
+</header>
+<main>
+  <div class="col">
+    <div class="card">
+      <h2>1 · Can I pay every bill?</h2>
+      <svg id="cash" viewBox="0 0 320 150" role="img" aria-label="Projected balance for the next 60 days"></svg>
+      <div id="cashtext" class="small muted">Run the meeting to simulate the next 60 days.</div>
+    </div>
+    <div class="card">
+      <h2>2 · How much can I invest?</h2>
+      <div id="alloc" class="small muted">—</div>
+    </div>
+    <div class="card">
+      <h2>Tell it something new</h2>
+      <div class="say">
+        <input id="say" placeholder="e.g. dentist bill 4,500 due on the 9th">
+        <button id="sayBtn">Add</button>
+      </div>
+      <div id="extras" class="small"></div>
+      <div class="small muted" style="margin-top:6px">Muse Spark turns the sentence into a bill or income, then the whole plan reruns.</div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card">
+      <h2>Decision chain</h2>
+      <div class="stagebar" id="stagebar"></div>
+      <svg id="graph" viewBox="0 0 1180 560" role="img" aria-label="Decision chain node graph"></svg>
+    </div>
+    <div class="card" id="detail">
+      <h2>Selected step</h2>
+      <div class="muted small">Click any node to see what it decided, the evidence it used and the exact Meta Model API call.</div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card">
+      <h2>Meta Model API calls (live)</h2>
+      <div class="stats" style="margin-bottom:10px">
+        <div class="stat"><div class="v" id="sCalls">0</div><div class="k">calls</div></div>
+        <div class="stat"><div class="v" id="sTok">0</div><div class="k">tokens</div></div>
+        <div class="stat"><div class="v" id="sReason">0%</div><div class="k">reasoning tokens</div></div>
+        <div class="stat"><div class="v" id="sSpeed">—</div><div class="k">parallel speed-up</div></div>
+      </div>
+      <div class="calls" id="calls"></div>
+    </div>
+    <div class="card why">
+      <h2>Why Meta Model API</h2>
+      <ul class="plain small" id="why"></ul>
+    </div>
+    <div class="card">
+      <h2>Decision</h2>
+      <div id="decision" class="decision muted">—</div>
+    </div>
+  </div>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const NS = "http://www.w3.org/2000/svg";
+const fmt = n => (n < 0 ? "−" : "") + Math.abs(Math.round(n)).toLocaleString("en-US");
+let info = {}, extras = [], nodes = {}, edges = [], calls = [], events = {}, totals = {}, verdicts = [], running = false;
+
+const STAGES = [["research","Research"],["proposals","Proposals"],["scoring","Scoring"],["devil","Devil’s advocate"],["risk","Risk veto"],["chair","Decision"]];
+
+// ---------- node graph layout ----------
+const COLS = {data:80, res:270, prop:475, mas:670, devil:850, risk:1020, dec:1110};
+const LAYOUT = [
+  ["market","Market data","data",COLS.data,170,"TWSE features"],
+  ["cash","Cash engine","data",COLS.data,390,"bills → fund → invest"],
+  ["technicals","Technicals","researcher",COLS.res,85],
+  ["etf_dividend","ETF & dividend","researcher",COLS.res,215],
+  ["semis","Semis chain","researcher",COLS.res,345],
+  ["flows","Market temp.","researcher",COLS.res,475],
+  ["A","A · all 0050","proposal",COLS.prop,150],
+  ["B","B · 0050+00878","proposal",COLS.prop,280],
+  ["C","C · split buy","proposal",COLS.prop,410],
+  ["buffett","Buffett","master",COLS.mas,70],
+  ["lynch","Lynch","master",COLS.mas,175],
+  ["bogle","Bogle","master",COLS.mas,280],
+  ["dalio","Dalio","master",COLS.mas,385],
+  ["kostolany","Kostolany","master",COLS.mas,490],
+  ["devil","Devil’s advocate","devil",COLS.devil,200],
+  ["risk","Risk officer","risk",COLS.risk,360,"rules · no LLM"],
+  ["chief","Decision","chair",COLS.dec,200,"chair explains"],
+];
+const W = {data:150,researcher:165,proposal:175,master:150,devil:160,risk:150,chair:130};
+
+function line(a, b, cls){
+  const A = nodes[a], B = nodes[b];
+  const x1 = A.x + A.w/2, x2 = B.x - B.w/2, mx = (x1 + x2)/2;
+  const p = document.createElementNS(NS,"path");
+  p.setAttribute("d",`M${x1},${A.y} C${mx},${A.y} ${mx},${B.y} ${x2},${B.y}`);
+  p.setAttribute("class","edge"+(cls?" "+cls:""));
+  p.dataset.from = a; p.dataset.to = b;
+  $("#graph").appendChild(p); edges.push(p);
+}
+
+function buildGraph(){
+  const g = $("#graph"); g.innerHTML = ""; nodes = {}; edges = [];
+  LAYOUT.forEach(([id,label,layer,x,y,sub]) => nodes[id] = {id,label,layer,x,y,sub,w:W[layer],h:sub?58:46});
+  const R = ["technicals","etf_dividend","semis","flows"], P = ["A","B","C"], M = ["buffett","lynch","bogle","dalio","kostolany"];
+  R.forEach(r => line("market", r));
+  R.forEach(r => P.forEach(p => line(r, p)));
+  P.forEach(p => line("cash", p));
+  P.forEach(p => M.forEach(m => line(p, m)));
+  M.forEach(m => line(m, "devil"));
+  line("devil","risk"); P.forEach(p => line(p,"risk","toRisk")); line("risk","chief");
+  Object.values(nodes).forEach(n => {
+    const el = document.createElementNS(NS,"g");
+    el.setAttribute("class","node"); el.dataset.id = n.id;
+    el.innerHTML = `<rect x="${n.x-n.w/2}" y="${n.y-n.h/2}" width="${n.w}" height="${n.h}" rx="10"></rect>
+      <text x="${n.x}" y="${n.y-(n.sub?6:-4)}" text-anchor="middle">${n.label}</text>
+      ${n.sub?`<text class="sub" x="${n.x}" y="${n.y+14}" text-anchor="middle">${n.sub}</text>`:""}`;
+    el.addEventListener("click", () => select(n.id));
+    g.appendChild(el); n.el = el;
+  });
+}
+function setNode(id, state, sub){
+  const n = nodes[id]; if(!n) return;
+  n.el.classList.remove("running","done","veto","ok","skip");
+  if(state) n.el.classList.add(state);
+  if(sub !== undefined){
+    let t = n.el.querySelector(".sub");
+    if(!t){ t = document.createElementNS(NS,"text"); t.setAttribute("class","sub"); t.setAttribute("x",n.x); t.setAttribute("y",n.y+14); t.setAttribute("text-anchor","middle"); n.el.appendChild(t);
+      n.el.querySelector("rect").setAttribute("height",58); n.el.querySelector("rect").setAttribute("y",n.y-29); n.el.querySelector("text").setAttribute("y",n.y-6); }
+    t.textContent = sub;
+  }
+}
+function lightEdges(pred, cls="on"){ edges.forEach(e => { if(pred(e.dataset.from, e.dataset.to)) e.classList.add(cls); }); }
+
+function stage(s){
+  const i = STAGES.findIndex(x => x[0] === s);
+  [...$("#stagebar").children].forEach((el,j) => el.className = j < i ? "past" : j === i ? "on" : "");
+}
+
+// ---------- detail panel ----------
+function esc(s){ return String(s ?? "").replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+function select(id){
+  document.querySelectorAll(".node.sel").forEach(e => e.classList.remove("sel"));
+  nodes[id]?.el.classList.add("sel");
+  const ev = events[id], n = nodes[id], d = $("#detail");
+  let h = `<h2>${esc(n?.label || id)}</h2>`;
+  if(id === "cash" && events.cash){
+    const c = events.cash, a = events.alloc;
+    h += `<div>Lowest balance <b class="${c.lowest < c.buffer ? "neg":""}">${fmt(c.lowest)}</b> on ${c.lowest_day}. ${c.transfers.map(esc).join(" ")}</div>`;
+    if(a) h += `<ul class="plain">${a.reasons.map(r => `<li>${esc(r)}</li>`).join("")}</ul><div class="muted small">Deterministic Python. No model is allowed to change these amounts.</div>`;
+  } else if(id === "market" && events.market){
+    h += `<pre>${esc(JSON.stringify(events.market.features, null, 1))}</pre><div class="muted small">The only numbers researchers may cite.</div>`;
+  } else if(["A","B","C"].includes(id) && events.proposals){
+    const p = events.proposals.find(x => x.id === id), v = verdicts.find(x => x.proposal_id === id);
+    h += `<div>${esc(p.title)} — ${p.orders.map(o => `${o.side} ${o.symbol} ${fmt(o.amount)}`).join(", ")}</div>`;
+    if(totals[id] !== undefined) h += `<div>Committee score: <b>${totals[id]}</b> / 25</div>`;
+    if(v) h += `<div class="${v.approved?"":"neg"}"><b>${v.approved ? "APPROVED by risk officer" : "VETOED: " + esc(v.violations.join("; "))}</b></div>`;
+  } else if(id === "risk"){
+    h += verdicts.length ? `<ul class="plain">${verdicts.map(v => `<li><b>${v.proposal_id}</b>: ${v.approved ? "approved" : "veto — " + esc(v.violations.join("; "))}</li>`).join("")}</ul>
+      <div class="muted small">Hard rules in finagent/risk.py. The risk officer makes no API call: an LLM cannot talk its way past it.</div>` : `<div class="muted">Waiting…</div>`;
+  } else if(ev){
+    const o = ev.output, c = ev.call;
+    if(o.evidence) h += `<div><b>${esc(o.direction)}</b> · strength ${esc(o.strength)}</div><div>${esc(o.evidence)}</div>`;
+    if(o.scores) h += `<div>Scores: ${Object.entries(o.scores).map(([k,v]) => `<b>${k}</b> ${v}`).join(" · ")}</div><div>${esc(o.reason)}</div>`;
+    if(o.attack) h += `<div><b>Attack:</b> ${esc(o.attack)}</div><div><b>Would prove me wrong:</b> ${esc(o.falsifier)}</div>`;
+    if(o.summary) h += `<div>${esc(o.summary)}</div>`;
+    h += `<div class="muted small" style="margin-top:8px">${esc(c.model)} · ${(c.ms/1000).toFixed(1)}s · ${c.prompt_tokens ?? "–"} in / ${c.completion_tokens ?? "–"} out${c.reasoning_tokens ? ` (${c.reasoning_tokens} reasoning)` : ""}${c.fallback ? " · FELL BACK TO MOCK" : ""}</div>`;
+    if(ev.raw) h += `<details><summary>Exact API request &amp; response</summary><pre>POST ${esc(info.base)}/chat/completions
+model: ${esc(c.model)}
+
+[system]
+${esc(ev.raw.system)}
+
+[user]
+${esc(ev.raw.user)}
+
+[assistant]
+${esc(ev.raw.reply)}</pre></details>`;
+  } else h += `<div class="muted">Not run yet.</div>`;
+  d.innerHTML = h;
+}
+
+// ---------- api log ----------
+function addCall(id, label, c, raw){
+  calls.push(c);
+  const el = document.createElement("div"); el.className = "call";
+  el.innerHTML = `<b>${esc(label)}</b><span class="m">${(c.ms/1000).toFixed(1)}s</span>
+    <span class="m">${esc(c.model)}</span><span class="m">${c.completion_tokens ?? "–"} tok${c.reasoning_tokens ? ` · ${c.reasoning_tokens} think` : ""}</span>`;
+  el.addEventListener("click", () => id ? select(id) : null);
+  $("#calls").prepend(el);
+  const tok = calls.reduce((s,x) => s + (x.prompt_tokens||0) + (x.completion_tokens||0), 0);
+  const out = calls.reduce((s,x) => s + (x.completion_tokens||0), 0), rsn = calls.reduce((s,x) => s + (x.reasoning_tokens||0), 0);
+  $("#sCalls").textContent = calls.length; $("#sTok").textContent = tok.toLocaleString("en-US");
+  $("#sReason").textContent = out ? Math.round(100*rsn/out) + "%" : "0%";
+}
+
+// ---------- cash chart ----------
+function drawCash(c){
+  const svg = $("#cash"), Wd = 320, Ht = 150, pad = 8;
+  const vals = [c.start, ...c.days.map(d => d.bal)], lo = Math.min(...vals, c.buffer, 0), hi = Math.max(...vals, c.buffer);
+  const X = i => pad + i*(Wd-2*pad)/(vals.length-1), Y = v => Ht-pad - (v-lo)*(Ht-2*pad)/((hi-lo)||1);
+  const pts = vals.map((v,i) => `${X(i)},${Y(v)}`).join(" ");
+  svg.innerHTML = `<rect x="0" y="${Y(c.buffer)}" width="${Wd}" height="${Ht-Y(c.buffer)}" fill="#F07A5E" opacity=".12"></rect>
+    <line x1="0" x2="${Wd}" y1="${Y(c.buffer)}" y2="${Y(c.buffer)}" stroke="#F07A5E" stroke-dasharray="4 3"></line>
+    <line x1="0" x2="${Wd}" y1="${Y(0)}" y2="${Y(0)}" stroke="#3A4D70"></line>
+    <polyline points="${pts}" fill="none" stroke="#5AA2F0" stroke-width="2.5"></polyline>
+    ${vals.map((v,i) => v < c.buffer ? `<circle cx="${X(i)}" cy="${Y(v)}" r="2.6" fill="#F07A5E"></circle>` : "").join("")}`;
+  const short = c.shortfall_days.length;
+  $("#cashtext").innerHTML = `<div>Lowest <span class="big ${c.lowest < c.buffer ? "neg" : ""}">${fmt(c.lowest)}</span> on ${c.lowest_day}</div>
+    <div>${short ? `<b class="neg">Below buffer on ${short} days</b> (dashed line = buffer ${fmt(c.buffer)})` : `Never below buffer ${fmt(c.buffer)}`}</div>
+    ${c.transfers.length ? `<ul class="plain">${c.transfers.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}`;
+}
+
+// ---------- run ----------
+function reset(){
+  buildGraph(); calls = []; events = {}; totals = {}; verdicts = [];
+  $("#calls").innerHTML = ""; ["#sCalls","#sTok"].forEach(s => $(s).textContent = "0"); $("#sReason").textContent = "0%"; $("#sSpeed").textContent = "—";
+  $("#decision").innerHTML = "—"; $("#decision").className = "decision muted";
+  $("#stagebar").innerHTML = STAGES.map(s => `<span>${s[1]}</span>`).join("");
+}
+
+function handle(ev){
+  switch(ev.type){
+    case "cash": events.cash = ev; drawCash(ev); setNode("cash","done"); break;
+    case "alloc": events.alloc = ev;
+      $("#alloc").innerHTML = ev.investable > 0
+        ? `<div class="big">${fmt(ev.investable)}</div><ul class="plain">${ev.reasons.map(r => `<li>${esc(r)}</li>`).join("")}</ul>`
+        : `<div class="big neg">0</div><div>${esc(ev.reasons.join(" "))}</div>`;
+      setNode("cash", ev.investable > 0 ? "done" : "veto", ev.investable > 0 ? `investable ${fmt(ev.investable)}` : "bills first: invest 0");
+      break;
+    case "market": events.market = ev; setNode("market","done"); break;
+    case "stage": stage(ev.stage); break;
+    case "agent_start": setNode(ev.id, "running"); break;
+    case "agent_done": {
+      events[ev.id] = ev; const o = ev.output;
+      const sub = o.direction ? `${o.direction} · ${o.strength}/5` : o.scores ? Object.entries(o.scores).map(([k,v]) => k+v).join(" ") : o.attack ? "attacks leader" : "";
+      setNode(ev.id, "done", sub || undefined);
+      if(ev.layer === "researcher") lightEdges((a,b) => (a === "market" && b === ev.id) || a === ev.id);
+      if(ev.layer === "master") lightEdges((a,b) => b === ev.id);
+      if(ev.layer === "devil") lightEdges((a,b) => b === "devil" || (a === "devil" && b === "risk"));
+      addCall(ev.id, ev.name, ev.call, ev.raw);
+      if(ev.layer === "chair") select("chief");
+      break;
+    }
+    case "proposals": events.proposals = ev.proposals;
+      ev.proposals.forEach(p => setNode(p.id, "done", `${fmt(p.orders.reduce((s,o) => s+o.amount, 0))} TWD`));
+      lightEdges((a,b) => a === "cash"); break;
+    case "totals": totals = ev.totals;
+      Object.entries(ev.totals).forEach(([k,v]) => setNode(k, "done", `score ${v}/25${k === ev.leader ? " · leader" : ""}`)); break;
+    case "risk": verdicts = ev.verdicts;
+      setNode("risk","done");
+      ev.verdicts.forEach(v => {
+        const why = v.approved ? "" : (v.violations[0].match(/\d+%/) ? v.violations[0].match(/\d+%/)[0] + " in 1 fund" : "rule broken");
+        setNode(v.proposal_id, v.approved ? "ok" : "veto", v.approved ? `APPROVED · ${totals[v.proposal_id]}/25` : `VETO · ${why}`);
+        lightEdges((a,b) => a === v.proposal_id && b === "risk", v.approved ? "on" : "veto");
+      });
+      setNode("risk", "done", `${ev.verdicts.filter(v => !v.approved).length} of ${ev.verdicts.length} vetoed`);
+      lightEdges((a,b) => a === "risk"); select("risk"); break;
+    case "decision": {
+      const d = ev.decision;
+      if(!d.choice){ ["A","B","C","buffett","lynch","bogle","dalio","kostolany","devil","risk"].forEach(id => setNode(id,"skip")); setNode("chief","veto","invest 0 this month"); stage("chair"); }
+      else setNode("chief","ok", d.choice.id + " · " + fmt(d.choice.orders.reduce((s,o)=>s+o.amount,0)));
+      $("#decision").className = "decision";
+      $("#decision").innerHTML = `${d.choice ? `<div class="big">${esc(d.choice.id)} · ${esc(d.choice.title)}</div>` : ""}<div>${esc(d.summary)}</div>`;
+      break;
+    }
+    case "done":
+      window.__runs = (window.__runs || 0) + 1;
+      $("#sSpeed").textContent = ev.sum_call_ms && ev.wall_ms ? (ev.sum_call_ms/ev.wall_ms).toFixed(1) + "×" : "—";
+      [...$("#stagebar").children].forEach(el => el.className = "past");
+      $("#decision").insertAdjacentHTML("beforeend", `<div class="muted small" style="margin-top:8px">${ev.calls} Meta Model API calls in ${(ev.wall_ms/1000).toFixed(1)}s · full log: ${esc(ev.trace_file)}</div>`);
+      break;
+    case "error": $("#decision").innerHTML = `<b class="neg">${esc(ev.message)}</b>`; break;
+  }
+}
+
+async function run(){
+  if(running) return; running = true; $("#run").disabled = true; reset();
+  try{
+    const res = await fetch("/api/run", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({persona: $("#persona").value, extras})});
+    const reader = res.body.getReader(), dec = new TextDecoder(); let buf = "";
+    for(;;){
+      const {value, done} = await reader.read(); if(done) break;
+      buf += dec.decode(value, {stream:true});
+      let i; while((i = buf.indexOf("\n")) >= 0){ const line = buf.slice(0,i); buf = buf.slice(i+1); if(line.trim()) handle(JSON.parse(line)); }
+    }
+  } finally { running = false; $("#run").disabled = false; }
+}
+
+async function say(){
+  const text = $("#say").value.trim(); if(!text) return;
+  $("#sayBtn").disabled = true; $("#sayBtn").textContent = "Muse Spark…";
+  try{
+    const r = await (await fetch("/api/parse", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({text})})).json();
+    extras.push(r.item);
+    $("#extras").insertAdjacentHTML("beforeend", `<span class="chip">${r.kind === "income" ? "+" : "−"}${fmt(r.item.amount)} ${esc(r.item.name)} · day ${r.item.day_of_month}</span>`);
+    events["intake"+extras.length] = {output:{summary:`Parsed “${text}” → ${JSON.stringify(r.item)}`}, call:r.call, raw:r.raw};
+    addCall(null, "Natural-language intake", r.call, r.raw);
+    $("#say").value = "";
+    run();
+  } finally { $("#sayBtn").disabled = false; $("#sayBtn").textContent = "Add"; }
+}
+
+async function init(){
+  info = await (await fetch("/api/info")).json();
+  $("#mode").textContent = info.mock ? "OFFLINE MOCK" : "LIVE · META MODEL API";
+  $("#mode").className = "badge " + (info.mock ? "mock" : "live");
+  $("#modelinfo").textContent = `agents: ${info.models.small} · chair & devil: ${info.models.chief}`;
+  $("#persona").innerHTML = info.personas.map(p => `<option value="${p}" ${p === "student" ? "selected" : ""}>${p.replace(/_/g," ")}</option>`).join("");
+  $("#why").innerHTML = [
+    `<b>One key, ${info.available.length || "9"} models</b>${info.available.length ? ": " + esc(info.available.join(", ")) : ""}`,
+    `<b>OpenAI-compatible</b> — one 60-line client (finagent/llm.py), no SDK lock-in`,
+    `<b>Visible reasoning</b> — Muse Spark reports reasoning tokens per call (see counter)`,
+    `<b>Reliable JSON</b> — every agent returns a schema the code validates`,
+    `<b>Parallel calls</b> — 4 researchers and 5 masters run at once`,
+    `<b>Open weights</b> — cheap roles can move to Muse Spark Open on a home GPU`,
+  ].map(x => `<li>${x}</li>`).join("");
+  reset();
+}
+$("#run").addEventListener("click", run);
+$("#sayBtn").addEventListener("click", say);
+$("#say").addEventListener("keydown", e => { if(e.key === "Enter") say(); });
+init();
+</script>
+</body>
+</html>

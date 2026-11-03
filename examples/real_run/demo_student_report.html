@@ -1,0 +1,44 @@
+<!doctype html><meta charset="utf-8"><title>Demo Student monthly plan</title>
+<style>body{font-family:system-ui;max-width:860px;margin:2em auto;padding:0 16px;background:#fff;color:#111}
+table{border-collapse:collapse;width:100%}td{border-bottom:1px solid #ddd;padding:4px}.bad{background:#fdd}</style>
+<h1>Demo Student — monthly plan</h1>
+<p>LLM mode: Meta Model API</p>
+<h2>1. Can I pay every bill?</h2>
+<p>Lowest balance 15,701 on 2026-12-01. No shortfall.</p>
+<table><tr class=''><td>2026-11-05</td><td>27,500</td><td>+16,000 Part-time job; -7,000 Rent</td></tr><tr class=''><td>2026-11-10</td><td>21,300</td><td>-6,200 Card bill</td></tr><tr class=''><td>2026-11-15</td><td>20,701</td><td>-599 Phone</td></tr><tr class=''><td>2026-11-20</td><td>22,201</td><td>+3,000 Rent subsidy; -1,500 Laptop installment</td></tr><tr class=''><td>2026-12-01</td><td>15,701</td><td>-6,500 Food &amp; transport</td></tr><tr class=''><td>2026-12-05</td><td>24,701</td><td>+16,000 Part-time job; -7,000 Rent</td></tr><tr class=''><td>2026-12-15</td><td>24,102</td><td>-599 Phone</td></tr><tr class=''><td>2026-12-20</td><td>25,602</td><td>+3,000 Rent subsidy; -1,500 Laptop installment</td></tr><tr class=''><td>2027-01-01</td><td>19,102</td><td>-6,500 Food &amp; transport</td></tr></table>
+<h2>2. How much can I invest?</h2><ul><li>Lowest projected balance 15,701; spare above buffer 12,701.</li><li>Emergency fund short by 4,000: put 4,000 there first.</li><li>Investable this month: 8,701.</li></ul>
+<h2>3. Committee</h2><h3>Signal cards</h3><ul><li><b>Technical position</b> neutral (3): 0050 last 195.81 below ma20 196.08 above ma60 193.04 pct_vs_ma60 0.0143 chg_20d -0.0438; 006208 last 133.91 below ma20 134.57 above ma60 130.23 pct_vs_ma60 0.0283 chg_20d 0.0102; 0056 last 40.44 below ma20 41.29 above ma60 39.5 pct_vs_ma60 0.0238 chg_20d -0.0158; 00878 last 28.61 below ma20 29.48 above ma60 26.74 pct_vs_ma60 0.0699 chg_20d -0.0269; 00632R last 3.65 above ma20 3.63 above ma60 3.55 pct_vs_ma60 0.0287 chg_20d -0.0135; favors split entry</li><li><b>ETF &amp; dividend</b> neutral (3): 0050 last 195.81 below ma20 196.08 and above ma60 193.04 with pct_vs_ma60 0.0143 and chg_20d -0.0438 while 006208 last 133.91 below ma20 134.57 and above ma60 130.23 with pct_vs_ma60 0.0283 and chg_20d 0.0102 favors 006208 over 0050 for core market exposure and 0056 last 40.44 below ma20 41.29 and above ma60 39.5 with pct_vs_ma60 0.0238 and chg_20d -0.0158 while 00878 last 28.61 below ma20 29.48 and above ma60 26.74 with pct_vs_ma60 0.0699 and chg_20d -0.0269 keeps dividend trend intact with pullback</li><li><b>Semiconductor chain</b> neutral (3): 0050 last 195.81 below ma20 196.08 with chg_20d -0.0438, ma60 193.04 with pct_vs_ma60 0.0143; 006208 last 133.91 vs ma20 134.57 with chg_20d 0.0102</li><li><b>Market temperature</b> bearish (2): 0050 chg_20d -0.0438 last 195.81 below ma20 196.08, 006208 chg_20d 0.0102 last 133.91 below ma20 134.57, 0056 chg_20d -0.0158 last 40.44 below ma20 41.29, 00878 chg_20d -0.0269 last 28.61 below ma20 29.48, 00632R chg_20d -0.0135 shows cooling crowd heat, avoid chasing</li></ul>
+<h3>Scores</h3><pre>{
+ &quot;buffett&quot;: {
+  &quot;A&quot;: 3,
+  &quot;B&quot;: 2,
+  &quot;C&quot;: 5
+ },
+ &quot;lynch&quot;: {
+  &quot;A&quot;: 2,
+  &quot;B&quot;: 1,
+  &quot;C&quot;: 3
+ },
+ &quot;bogle&quot;: {
+  &quot;A&quot;: 4,
+  &quot;B&quot;: 2,
+  &quot;C&quot;: 5
+ },
+ &quot;dalio&quot;: {
+  &quot;A&quot;: 1,
+  &quot;B&quot;: 2,
+  &quot;C&quot;: 5
+ },
+ &quot;kostolany&quot;: {
+  &quot;A&quot;: 2,
+  &quot;B&quot;: 3,
+  &quot;C&quot;: 4
+ }
+}</pre>
+<h3>Devil's advocate</h3><pre>{
+ &quot;strongest_counter_argument&quot;: &quot;Buying half now catches a confirmed short-term downtrend: all 4 longs below ma20 (0050 195.81&lt;196.08, 006208 133.91&lt;134.57, 0056 40.44&lt;41.29, 00878 28.61&lt;29.48) with 0050 chg_20d -0.0438 leading weakness. 006208 at pct_vs_ma60 0.0283 is more extended than 0050 at 0.0143 with only chg_20d 0.0102, implying catch-up downside risk toward ma60 130.23 (-2.7% lower). Bearish temperature (strength 2) explicitly warns cooling heat / avoid chasing. Split still commits capital before any support test or ma20 reclaim.&quot;,
+ &quot;what_would_prove_it_wrong&quot;: &quot;006208 holds above ma60 130.23 and reclaims ma20 134.57 while 0050 holds above ma60 193.04 and chg_20d flattens/turns positive, proving this was healthy consolidation above trend not a deeper leg down, with the second half filled at equal or higher price.&quot;
+}</pre>
+<h3>Risk officer (rules, not LLM)</h3><ul><li>A: VETO — 0050: would be 94% of portfolio (&gt; 60%).</li><li>B: VETO — 0050: would be 74% of portfolio (&gt; 60%).</li><li>C: APPROVED</li></ul>
+<h2>Decision</h2><p>We chose C: buy half of 006208 now and half next week. A and B were blocked because they would put over 60% in one stock. Splitting is safer since prices are in a short-term dip.</p>
+<p><small>AI role-play, not financial advice. Never places orders.</small></p>

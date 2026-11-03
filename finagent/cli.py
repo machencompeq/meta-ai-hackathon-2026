@@ -7,7 +7,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from . import committee, engine, market
+from . import committee, engine, llm, market
 from .models import Profile
 
 
@@ -41,7 +41,10 @@ def main() -> None:
         "risk": [v.model_dump() for v in meeting.verdicts],
         "decision": meeting.decision,
     }
+    log["master_reasons"] = meeting.reasons
     (out / f"{stem}_decision.json").write_text(json.dumps(log, ensure_ascii=False, indent=2), encoding="utf-8")
+    # every Meta Model API call: prompt, raw reply, tokens, latency
+    (out / f"{stem}_trace.jsonl").write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in llm.TRACE), encoding="utf-8")
     (out / f"{stem}_report.html").write_text(render(profile, plan, log), encoding="utf-8")
     print(json.dumps(log["decision"], ensure_ascii=False, indent=2))
     print(f"report: {out / (stem + '_report.html')}")
