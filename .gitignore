@@ -8,3 +8,5 @@ docs/_private/
 submit.yml
 out_*/
 shot_*.png
+*.yml.snapshot
+submit*.yml
