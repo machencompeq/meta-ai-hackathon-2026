@@ -1,0 +1,18 @@
+{
+  "name": "Short On Cash",
+  "persona": "Fictional user whose card bill lands before payday. Shows the shortfall + transfer plan.",
+  "today": "2026-11-03",
+  "accounts": [
+    {"id": "bank", "name": "Main bank", "kind": "bank", "balance": 4200},
+    {"id": "ef", "name": "Emergency fund", "kind": "savings_goal", "balance": 9000}
+  ],
+  "obligations": [
+    {"name": "Card bill", "amount": 8800, "day_of_month": 8, "account_id": "bank", "months_left": 1},
+    {"name": "Rent", "amount": 6000, "day_of_month": 12, "account_id": "bank"}
+  ],
+  "incomes": [
+    {"name": "Salary", "amount": 28000, "day_of_month": 15, "account_id": "bank"}
+  ],
+  "holdings": [],
+  "policy": {"emergency_fund_target": 30000, "min_cash_buffer": 1000}
+}

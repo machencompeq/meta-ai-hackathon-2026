@@ -1,0 +1,44 @@
+# Investment committee, config-driven. Add a role = add an entry; no code change.
+# layer: researcher -> signal card; master -> scores proposals; devil -> attacks winner.
+# The risk officer is NOT here on purpose: it is the rule engine in risk.py.
+researchers:
+  - id: technicals
+    name: Technical position
+    tier: small
+    focus: Distance from 20/60-day averages; buy at once or split in two.
+  - id: etf_dividend
+    name: ETF & dividend
+    tier: small
+    focus: Core ETF choice (0050 / 006208 / 0056 / 00878), cost, yield.
+  - id: semis
+    name: Semiconductor chain
+    tier: small
+    focus: 0050 is TSMC-heavy; read the semis trend from the data given.
+  - id: flows
+    name: Market temperature
+    tier: small
+    focus: 20-day momentum as a proxy for crowd heat; avoid chasing.
+masters:
+  - id: buffett
+    name: Buffett
+    checks: Margin of safety; only what you understand; veto on single stocks.
+  - id: lynch
+    name: Lynch
+    checks: Where growth comes from; PEG < 1.
+  - id: bogle
+    name: Bogle
+    checks: Low cost, broad index; why deviate from the market?
+  - id: dalio
+    name: Dalio
+    checks: Balance and emergency-fund sufficiency.
+  - id: kostolany
+    name: Kostolany
+    checks: Crowd sentiment; only spare money; cap on speculation.
+devil:
+  id: devil
+  name: Devil's advocate
+  tier: chief
+chief:
+  id: chief
+  name: Committee chair
+  tier: chief

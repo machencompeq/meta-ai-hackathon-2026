@@ -1,0 +1,32 @@
+{
+  "name": "Demo Student",
+  "persona": "Fictional grad student, part-time job, lives paycheck to paycheck. All numbers are made up.",
+  "today": "2026-11-03",
+  "accounts": [
+    {"id": "bank", "name": "Main bank", "kind": "bank", "balance": 18500},
+    {"id": "card", "name": "Credit card", "kind": "credit_card", "balance": -6200, "statement_day": 25, "due_day": 10, "credit_limit": 30000},
+    {"id": "ef", "name": "Emergency fund", "kind": "savings_goal", "balance": 6000},
+    {"id": "broker", "name": "Brokerage", "kind": "brokerage", "balance": 0}
+  ],
+  "obligations": [
+    {"name": "Card bill", "amount": 6200, "day_of_month": 10, "account_id": "bank", "months_left": 1},
+    {"name": "Rent", "amount": 7000, "day_of_month": 5, "account_id": "bank"},
+    {"name": "Phone", "amount": 599, "day_of_month": 15, "account_id": "bank"},
+    {"name": "Laptop installment", "amount": 1500, "day_of_month": 20, "account_id": "bank", "months_left": 6},
+    {"name": "Food & transport", "amount": 6500, "day_of_month": 1, "account_id": "bank"}
+  ],
+  "incomes": [
+    {"name": "Part-time job", "amount": 16000, "day_of_month": 5, "account_id": "bank"},
+    {"name": "Rent subsidy", "amount": 3000, "day_of_month": 20, "account_id": "bank"}
+  ],
+  "holdings": [
+    {"symbol": "0050", "name": "Yuanta Taiwan 50", "shares": 40, "avg_cost": 182.0},
+    {"symbol": "00632R", "name": "Inverse ETF (demo high-risk)", "shares": 300, "avg_cost": 5.2, "leveraged": true, "high_risk": true}
+  ],
+  "policy": {
+    "emergency_fund_target": 10000,
+    "min_cash_buffer": 3000,
+    "max_single_holding_pct": 0.6,
+    "max_leveraged_pct": 0.1
+  }
+}
