@@ -47,7 +47,8 @@ python -m finagent.web               # http://127.0.0.1:8765
 - **Live API log**: every call with model, latency, prompt/completion tokens and Muse Spark reasoning tokens; totals and the parallel speed-up.
 - **Natural-language intake**: type "dentist bill 9,000 due on the 9th" → Muse Spark returns a structured bill → the whole plan reruns.
 - Every run writes a full trace (`out/trace_*.jsonl`): prompt, raw reply, tokens, latency for each call.
-- `python scripts/record_demo.py` records the scripted demo with Playwright (`out/video/*.webm`).
+- `python scripts/record_demo.py` records the scripted demo with Playwright; `python scripts/build_video.py` turns slides (`docs/slides/`), the recording and a voice-over into the submission video, with subtitles timed by Meta's `muse-voice-transcribe-1.0` and a voice-reactive avatar.
+- Demo video: https://youtu.be/kuHbUgxLXEQ
 
 Measured on real runs (`examples/real_run/`): 11 calls to `muse-spark-1.3` per meeting, ~30k tokens of which 96% are reasoning tokens, 3.1× faster with parallel agents (under a minute per meeting).
 

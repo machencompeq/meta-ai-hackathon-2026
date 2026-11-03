@@ -1,0 +1,32 @@
+<section id="committee" data-transition="fade" style="background:#12203A;color:#F3EFE6;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:64px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:72px;font-weight:700;line-height:1.1">An investment committee of Muse Spark agents</h2>
+<div style="display:flex;gap:16px;align-items:center">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1D3054;padding:32px;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E">4 RESEARCHERS</p>
+<p style="font-size:28px;line-height:1.35">Signal cards that may only cite the data given</p>
+</div>
+<x-shape kind="arrow-right" style="background:#5E7396;width:48px;height:28px"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1D3054;padding:32px;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E">5 MASTERS</p>
+<p style="font-size:28px;line-height:1.35">Buffett, Lynch, Bogle, Dalio, Kostolany score 1–5</p>
+</div>
+<x-shape kind="arrow-right" style="background:#5E7396;width:48px;height:28px"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1D3054;padding:32px;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E">DEVIL’S ADVOCATE</p>
+<p style="font-size:28px;line-height:1.35">Attacks the winner, names what would prove it wrong</p>
+</div>
+<x-shape kind="arrow-right" style="background:#5E7396;width:48px;height:28px"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#F0A35E;color:#12203A;padding:32px;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600">RISK OFFICER</p>
+<p style="font-size:28px;line-height:1.35">Rule engine, not an LLM. Can veto anything</p>
+</div>
+<x-shape kind="arrow-right" style="background:#5E7396;width:48px;height:28px"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1D3054;padding:32px;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E">CHAIR</p>
+<p style="font-size:28px;line-height:1.35">Explains the decision to a student</p>
+</div>
+</div>
+<p style="font-size:32px;line-height:1.45;color:#C9D3E3;width:1500px">11 structured-JSON calls to <b>muse-spark-1.3</b> via the Meta Model API per meeting. Roles live in one YAML file: add an agent without touching code.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8FA0BC">finagent/roles.yaml · finagent/committee.py · finagent/risk.py</p>
+<aside>[03_arch] Each box is a live Muse Spark call through the Meta Model API: researchers, five investor personas, a devil’s advocate. The risk officer is plain code that can veto them. Let’s watch it run.</aside>
+</section>

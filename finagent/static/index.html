@@ -140,7 +140,7 @@ ul.plain{margin:6px 0 0;padding-left:18px}
 const $ = s => document.querySelector(s);
 const NS = "http://www.w3.org/2000/svg";
 const fmt = n => (n < 0 ? "−" : "") + Math.abs(Math.round(n)).toLocaleString("en-US");
-let info = {}, extras = [], nodes = {}, edges = [], calls = [], events = {}, totals = {}, verdicts = [], running = false;
+let info = {}, extras = [], pendingIntake = null, nodes = {}, edges = [], calls = [], events = {}, totals = {}, verdicts = [], running = false;
 
 const STAGES = [["research","Research"],["proposals","Proposals"],["scoring","Scoring"],["devil","Devil’s advocate"],["risk","Risk veto"],["chair","Decision"]];
 
@@ -295,6 +295,7 @@ function reset(){
   $("#calls").innerHTML = ""; ["#sCalls","#sTok"].forEach(s => $(s).textContent = "0"); $("#sReason").textContent = "0%"; $("#sSpeed").textContent = "—";
   $("#decision").innerHTML = "—"; $("#decision").className = "decision muted";
   $("#stagebar").innerHTML = STAGES.map(s => `<span>${s[1]}</span>`).join("");
+  if(pendingIntake){ addCall(null, "Natural-language intake", pendingIntake.call, pendingIntake.raw); pendingIntake = null; }
 }
 
 function handle(ev){
@@ -304,7 +305,7 @@ function handle(ev){
       $("#alloc").innerHTML = ev.investable > 0
         ? `<div class="big">${fmt(ev.investable)}</div><ul class="plain">${ev.reasons.map(r => `<li>${esc(r)}</li>`).join("")}</ul>`
         : `<div class="big neg">0</div><div>${esc(ev.reasons.join(" "))}</div>`;
-      setNode("cash", ev.investable > 0 ? "done" : "veto", ev.investable > 0 ? `investable ${fmt(ev.investable)}` : "bills first: invest 0");
+      setNode("cash", ev.investable > 0 ? "done" : "veto", ev.investable > 0 ? `investable ${fmt(ev.investable)}` : "invest 0");
       break;
     case "market": events.market = ev; setNode("market","done"); break;
     case "stage": stage(ev.stage); break;
@@ -336,7 +337,7 @@ function handle(ev){
       lightEdges((a,b) => a === "risk"); select("risk"); break;
     case "decision": {
       const d = ev.decision;
-      if(!d.choice){ ["A","B","C","buffett","lynch","bogle","dalio","kostolany","devil","risk"].forEach(id => setNode(id,"skip")); setNode("chief","veto","invest 0 this month"); stage("chair"); }
+      if(!d.choice){ ["A","B","C","buffett","lynch","bogle","dalio","kostolany","devil","risk"].forEach(id => setNode(id,"skip")); setNode("chief","veto","invest 0"); stage("chair"); }
       else setNode("chief","ok", d.choice.id + " · " + fmt(d.choice.orders.reduce((s,o)=>s+o.amount,0)));
       $("#decision").className = "decision";
       $("#decision").innerHTML = `${d.choice ? `<div class="big">${esc(d.choice.id)} · ${esc(d.choice.title)}</div>` : ""}<div>${esc(d.summary)}</div>`;
@@ -372,8 +373,7 @@ async function say(){
     const r = await (await fetch("/api/parse", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({text})})).json();
     extras.push(r.item);
     $("#extras").insertAdjacentHTML("beforeend", `<span class="chip">${r.kind === "income" ? "+" : "−"}${fmt(r.item.amount)} ${esc(r.item.name)} · day ${r.item.day_of_month}</span>`);
-    events["intake"+extras.length] = {output:{summary:`Parsed “${text}” → ${JSON.stringify(r.item)}`}, call:r.call, raw:r.raw};
-    addCall(null, "Natural-language intake", r.call, r.raw);
+    pendingIntake = r;  // shown in the API log of the rerun it triggers
     $("#say").value = "";
     run();
   } finally { $("#sayBtn").disabled = false; $("#sayBtn").textContent = "Add"; }
@@ -387,7 +387,7 @@ async function init(){
   $("#persona").innerHTML = info.personas.map(p => `<option value="${p}" ${p === "student" ? "selected" : ""}>${p.replace(/_/g," ")}</option>`).join("");
   $("#why").innerHTML = [
     `<b>One key, ${info.available.length || "9"} models</b>${info.available.length ? ": " + esc(info.available.join(", ")) : ""}`,
-    `<b>OpenAI-compatible</b> — one 60-line client (finagent/llm.py), no SDK lock-in`,
+    `<b>OpenAI-compatible</b> — one small client, under 100 lines (finagent/llm.py), no SDK lock-in`,
     `<b>Visible reasoning</b> — Muse Spark reports reasoning tokens per call (see counter)`,
     `<b>Reliable JSON</b> — every agent returns a schema the code validates`,
     `<b>Parallel calls</b> — 4 researchers and 5 masters run at once`,
