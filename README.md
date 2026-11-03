@@ -42,21 +42,19 @@ python -m finagent.cli examples/personas/student.json        # can invest
 python -m finagent.cli examples/personas/short_on_cash.json  # shortfall -> invest 0
 ```
 
-Without `META_API_KEY` it runs in **offline mock mode**, so the demo works anywhere. To use Meta models:
+Without `MODEL_API_KEY` it runs in **offline mock mode**, so the demo works anywhere. To use Meta models (key from https://dev.meta.ai):
 
 ```bash
-cp .env.example .env   # fill in, never commit
-export META_API_KEY=...            # Meta Model API key
-export META_MODEL_CHIEF=...        # e.g. Muse Spark model id
-export META_MODEL_SMALL=...        # smaller / cheaper model id
+export MODEL_API_KEY='LLM|...'       # never commit
+# optional: META_API_BASE (default https://api.meta.ai/v1), META_MODEL_CHIEF / META_MODEL_SMALL
 ```
 
 ## Meta models used
 
-| Role | Tier | Model |
+| Role | Tier | Default model |
 |---|---|---|
-| Researchers, masters | small | `META_MODEL_SMALL` (smaller Meta model or open weights run locally) |
-| Chair, devil's advocate | chief | `META_MODEL_CHIEF` (Muse Spark) |
+| Researchers, masters | small | `muse-spark-1.3` (override with `META_MODEL_SMALL`) |
+| Chair, devil's advocate | chief | `muse-spark-1.3` (override with `META_MODEL_CHIEF`) |
 
 ## Hard rules (risk officer)
 

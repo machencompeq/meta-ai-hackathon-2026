@@ -66,6 +66,7 @@ def test_risk_vetoes():
 
 
 def test_full_meeting_offline(monkeypatch):
+    monkeypatch.delenv("MODEL_API_KEY", raising=False)
     monkeypatch.delenv("META_API_KEY", raising=False)
     p = load("student.json")
     plan = engine.simulate_cash(p, 60)
