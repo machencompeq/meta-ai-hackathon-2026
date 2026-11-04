@@ -11,6 +11,14 @@ Every month it answers two questions:
 
 > All money math and rules are deterministic Python with unit tests. LLMs only interpret, argue and explain. The agent never places orders.
 
+## Built during the hackathon (Oct 27 – Nov 4, 2026)
+
+All code in this repo was written during the hackathon; the git history starts on Nov 3, 2026. Nothing was copied from an existing product or codebase.
+
+- **New:** everything in `finagent/` (data model, cash simulation, investable amount, risk rules, agent committee, Meta Model API client, natural-language intake, live web room), `tests/`, `scripts/` (demo recording, video build, Muse Voice Transcribe subtitles), `examples/` and `docs/slides/`.
+- **Written before the event, design only:** `docs/投資委員會概念書.md` is a concept note from Oct 23 (no code). It describes the committee idea that this project implements.
+- **Planning notes:** the other files in `docs/` (handoff notes, day-by-day plan, run log, script) are project notes written during the event.
+
 ## Architecture
 
 ```
